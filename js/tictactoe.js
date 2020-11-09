@@ -17,14 +17,21 @@ const gameBoard = (() => {
         if (pos2 == undefined && pos3 == undefined) {
             return board[pos1];
         } else {
-            if (pos1 == pos2 && pos1 == pos3) {
+            if (board[pos1] == board[pos2] && board[pos1] == board[pos3]) {
                 winConditionMet = true;
             }
         }
     }
 
     const checkWinLoop = (board) => {
-
+        checkCellState(0,1,2);
+        checkCellState(3,4,5);
+        checkCellState(6,7,8);
+        checkCellState(0,3,6);
+        checkCellState(1,4,7);
+        checkCellState(2,5,8);
+        checkCellState(0,4,8);
+        checkCellState(2,4,6);
     }
     return {getGameBoard, getWinCondition, setGameBoard, checkCellState};
 })();
@@ -35,6 +42,7 @@ const displayController = (() => {
         for (i in gameBoard.getGameBoard()) {
             const div = document.createElement('div');
             div.setAttribute('class', 'board-cell');
+            div.setAttribute('id', i);
             div.textContent = gameBoard.getGameBoard()[i];
             displayDiv.appendChild(div);
         };
@@ -45,6 +53,11 @@ const displayController = (() => {
 const Player = (name, symbol) => {
     const getPlayerName = () => name;
     const getPlayerSymbol = () => symbol;
+
+    const makeMove = (board, target) => {
+        board[target.id] = this.symbol;
+        target.textContent = this.symbol;
+    }
 
     return {getPlayerName, getPlayerSymbol};
 }
