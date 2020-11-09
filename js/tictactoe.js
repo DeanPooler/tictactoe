@@ -1,6 +1,10 @@
 const gameBoard = (() => {
-    const board = ['', '', '', '', '', '', '', '', ''];
+    const board = [null, null, null, null, null, null, null, null, null];
+    let winConditionMet = false;
+    
     const getGameBoard = () => board;
+    const getWinCondition = () => winConditionMet;
+
     const setGameBoard = (player, position) => {
         if (position >= 0 || position <= 8) {
             board[position] = player.getPlayerSymbol;
@@ -8,7 +12,21 @@ const gameBoard = (() => {
             alert('Yikes. That was an invalid move.');
         }
     }
-    return {getGameBoard, setGameBoard};
+
+    const checkCellState = (pos1, pos2, pos3) => {
+        if (pos2 == undefined && pos3 == undefined) {
+            return board[pos1];
+        } else {
+            if (pos1 == pos2 && pos1 == pos3) {
+                winConditionMet = true;
+            }
+        }
+    }
+
+    const checkWinLoop = (board) => {
+
+    }
+    return {getGameBoard, getWinCondition, setGameBoard, checkCellState};
 })();
 
 const displayController = (() => {
@@ -24,11 +42,19 @@ const displayController = (() => {
     return {populateDisplay};
 })();
 
-const PlayerFactory = (name, symbol) => {
+const Player = (name, symbol) => {
     const getPlayerName = () => name;
     const getPlayerSymbol = () => symbol;
 
     return {getPlayerName, getPlayerSymbol};
 }
 
+const Game = () => {
+    while (!winConditionMet) {
+        player1
+    }
+};
+
+let player1 = Player('Player 1', 'X');
+let player2 = Player('Player 2', 'O');
 displayController.populateDisplay();
