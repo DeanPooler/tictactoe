@@ -1,73 +1,95 @@
-const gameBoard = (() => {
+const GameBoard = (() => {
     const board = [null, null, null, null, null, null, null, null, null];
-    let winConditionMet = false;
-    
+    let winCondition = false;
+
     const getGameBoard = () => board;
-    const getWinCondition = () => winConditionMet;
+    const getWinCondition = () => winCondition;
+    const setGameBoard = (pos, sym) => { getGameBoard()[pos] = sym }
 
-    const setGameBoard = (player, position) => {
-        if (position >= 0 || position <= 8) {
-            board[position] = player.getPlayerSymbol;
-        } else {
-            alert('Yikes. That was an invalid move.');
+    const checkCell = (p1, p2, p3) => {
+        if (board[p1] != null && board[p1] == board[p2] && board[p1] == board[p3]) {
+            winCondition = true;
         }
     }
 
-    const checkCellState = (pos1, pos2, pos3) => {
-        if (pos2 == undefined && pos3 == undefined) {
-            return board[pos1];
-        } else {
-            if (board[pos1] == board[pos2] && board[pos1] == board[pos3]) {
-                winConditionMet = true;
-            }
-        }
+    const checkWin = (players, turn) => {
+        checkCell(0,1,2);
+        checkCell(3,4,5);
+        checkCell(6,7,8);
+        checkCell(0,3,6);
+        checkCell(1,4,7);
+        checkCell(2,5,8);
+        checkCell(0,4,8);
+        checkCell(2,4,6);
+        if (winCondition) { alert(`${players[turn % 2].playerName} has won the game at turn ${turn}!`)};
     }
 
-    const checkWinLoop = (board) => {
-        checkCellState(0,1,2);
-        checkCellState(3,4,5);
-        checkCellState(6,7,8);
-        checkCellState(0,3,6);
-        checkCellState(1,4,7);
-        checkCellState(2,5,8);
-        checkCellState(0,4,8);
-        checkCellState(2,4,6);
-    }
-    return {getGameBoard, getWinCondition, setGameBoard, checkCellState};
+    return {getGameBoard, getWinCondition, setGameBoard, checkWin}
 })();
 
 const displayController = (() => {
     const displayDiv = document.querySelector('#display');
-    const populateDisplay = () => {
-        for (i in gameBoard.getGameBoard()) {
-            const div = document.createElement('div');
-            div.setAttribute('class', 'board-cell');
-            div.setAttribute('id', i);
-            div.textContent = gameBoard.getGameBoard()[i];
-            displayDiv.appendChild(div);
-        };
-    };
-    return {populateDisplay};
+    
+    const populate = () => {
+        for (i in GameBoard.getGameBoard()) {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            cell.setAttribute('id', i);
+            cell.textContent = GameBoard.getGameBoard()[i];
+            displayDiv.appendChild(cell);
+        }
+    }
+
+    const update = () => {
+        for (i in GameBoard.getGameBoard()) {
+            const cell = document.getElementById(i);
+            cell.textContent = GameBoard.getGameBoard()[i];
+        }
+    }
+    return {populate, update};
 })();
 
 const Player = (name, symbol) => {
-    const getPlayerName = () => name;
-    const getPlayerSymbol = () => symbol;
+    const playerName = name;
+    const playerSymbol = symbol;
 
-    const makeMove = (board, target) => {
-        board[target.id] = this.symbol;
-        target.textContent = this.symbol;
-    }
+    const makeMove = (pos) => {
+        GameBoard.getGameBoard()[pos] = symbol;
+        displayController.update();
+    };
 
-    return {getPlayerName, getPlayerSymbol};
-}
-
-const Game = () => {
-    while (!winConditionMet) {
-        player1
-    }
+    return { playerName, playerSymbol, makeMove }
 };
 
-let player1 = Player('Player 1', 'X');
-let player2 = Player('Player 2', 'O');
-displayController.populateDisplay();
+const Game = (() => {
+    const player1 = Player('Player 1', 'X');
+    const player2 = Player('Player 2', 'O');
+    const players = [player1, player2];
+    let turn = 0;
+    
+    const init = () => {
+        displayController.populate();
+        addEventHandlers();
+    }
+
+    const addEventHandlers = () => {
+        const divs = document.querySelectorAll('.cell');
+        divs.forEach((div) => {
+            div.addEventListener('click', () => {
+                if (div.textContent != '') {
+                    alert('Wrong move!');
+                } else {
+                    players[turn % 2].makeMove(div.id);
+                    GameBoard.checkWin(players, turn);
+                    turn++;
+                }
+            })
+        })
+    }
+    init();
+})();
+
+
+const Controls = (() => {
+    startButton = document.querySelector('#start');
+})();
