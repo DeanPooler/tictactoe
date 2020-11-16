@@ -4,7 +4,6 @@ const GameBoard = (() => {
 
     const getGameBoard = () => board;
     const getWinCondition = () => winCondition;
-    const setGameBoard = (pos, sym) => { getGameBoard()[pos] = sym }
 
     const checkCell = (p1, p2, p3) => {
         if (board[p1] != null && board[p1] == board[p2] && board[p1] == board[p3]) {
@@ -24,7 +23,7 @@ const GameBoard = (() => {
         if (winCondition) { alert(`${players[turn % 2].playerName} has won the game at turn ${turn}!`)};
     }
 
-    return {getGameBoard, getWinCondition, setGameBoard, checkWin}
+    return { getGameBoard, getWinCondition, checkWin }
 })();
 
 const displayController = (() => {
