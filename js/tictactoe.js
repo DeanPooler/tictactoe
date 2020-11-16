@@ -11,6 +11,11 @@ const GameBoard = (() => {
         }
     }
 
+    const reset = () => {
+        for (i in board) { board[i] = null };
+        displayController.update();
+    }
+
     const checkWin = (players, turn) => {
         checkCell(0,1,2);
         checkCell(3,4,5);
@@ -23,7 +28,7 @@ const GameBoard = (() => {
         if (winCondition) { alert(`${players[turn % 2].playerName} has won the game at turn ${turn}!`)};
     }
 
-    return { getGameBoard, getWinCondition, checkWin }
+    return { getGameBoard, getWinCondition, checkWin, reset }
 })();
 
 const displayController = (() => {
@@ -88,7 +93,9 @@ const Game = (() => {
     init();
 })();
 
-
 const Controls = (() => {
-    startButton = document.querySelector('#start');
+    const start = document.querySelector('#start');
+    const reset = document.querySelector('#reset');
+
+    reset.addEventListener('click', GameBoard.reset);
 })();
